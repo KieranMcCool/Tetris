@@ -1,3 +1,4 @@
 *.o
 Arial.ttf
 main
+.vscode/*

@@ -15,7 +15,7 @@ typedef struct grid {
     Piece cells[GRID_HEIGHT * GRID_WIDTH];
 } Grid;
 
-bool Grid_Init();
+Grid Grid_Init();
 SDL_Point Grid_IndexToCoords(int n);
 int Grid_CoordsToIndex(SDL_Point p);
 Piece Grid_PieceAtIndex(int n);
@@ -28,7 +28,7 @@ typedef struct gameState {
     bool playing;
 } GameState;
 
-bool GameState_Init();
+GameState *GameState_Init();
 bool GameState_Tick();
 
 #endif 

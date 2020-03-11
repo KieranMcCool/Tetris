@@ -43,5 +43,5 @@ GameState *GameState_Init()
 
 bool GameState_Tick(GameState *gameState)
 {
-
+    gameState->playing = false;
 }

@@ -49,7 +49,7 @@ int main()
     while (game->playing)
     {
         PollEvent();
-        GameState_Tick();
+        GameState_Tick(game);
         Draw_GameState(game);
     }
 

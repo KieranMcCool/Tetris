@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include "game.h"
 
-Grid Grid_Init()
+Grid *Grid_Init()
 {
-
+    int size = sizeof(int) * GRID_WIDTH * GRID_HEIGHT;
+    Grid *grid = malloc(size);
+    for (int i; i <= size; i++){
+        grid->cells[i] = Empty;
+    }
+    return grid;
 }
 
 SDL_Point Grid_IndexToCoords(int n)
@@ -28,10 +33,15 @@ Piece Grid_PieceAtCoords(SDL_Point p)
 
 GameState *GameState_Init()
 {
-
+    GameState *gameState = malloc(sizeof(GameState));
+    gameState->dropping = false;
+    gameState->playing = true;
+    gameState->score = 0;
+    gameState->grid = Grid_Init();
+    return gameState;
 }
 
-bool GameState_Tick()
+bool GameState_Tick(GameState *gameState)
 {
 
 }

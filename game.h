@@ -1,6 +1,5 @@
 /* This Header defines all the data structures and method for the core game logic. */
 #ifndef GAME_H
-
 #define GAME_H
 
 #include <stdbool.h>
@@ -9,13 +8,13 @@
 #define GRID_WIDTH 10
 #define GRID_HEIGHT 20
 
-typedef enum piece { I, O, T, S, Z, J, L } Piece;
+typedef enum piece { I, O, T, S, Z, J, L, Empty } Piece;
 
 typedef struct grid {
     Piece cells[GRID_HEIGHT * GRID_WIDTH];
 } Grid;
 
-Grid Grid_Init();
+Grid *Grid_Init();
 SDL_Point Grid_IndexToCoords(int n);
 int Grid_CoordsToIndex(SDL_Point p);
 Piece Grid_PieceAtIndex(int n);

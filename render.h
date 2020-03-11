@@ -1,6 +1,5 @@
 /* This header defines all the core methods and functionality for the rendering of the game */ 
 #ifndef RENDER_H
-
 #define RENDER_H
 
 #include <SDL.h>

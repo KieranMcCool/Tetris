@@ -8,7 +8,9 @@ Grid *Grid_Init()
     Grid *grid = malloc(sizeof(Grid));
 
     for (int i = 0; i <= size; i++){
-        grid->cells[i] = Empty;
+        if (i % 2 == 0) grid->cells[i] = J;
+        else if (i % 3 == 0) grid->cells[i] = O;
+        else grid->cells[i] = Empty;
     }
     return grid;
 }

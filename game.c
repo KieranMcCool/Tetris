@@ -3,9 +3,11 @@
 
 Grid *Grid_Init()
 {
-    int size = sizeof(int) * GRID_WIDTH * GRID_HEIGHT;
-    Grid *grid = malloc(size);
-    for (int i; i <= size; i++){
+    int size = GRID_WIDTH * GRID_HEIGHT;
+
+    Grid *grid = malloc(sizeof(Grid));
+
+    for (int i = 0; i <= size; i++){
         grid->cells[i] = Empty;
     }
     return grid;
@@ -13,22 +15,26 @@ Grid *Grid_Init()
 
 SDL_Point Grid_IndexToCoords(int n)
 {
-
+    SDL_Point p;
+    p.x = n % GRID_WIDTH;
+    p.y = n/ GRID_WIDTH;
+    return p;
 }
 
 int Grid_CoordsToIndex(SDL_Point p)
 {
-
+    return p.x + (p.y * GRID_WIDTH);
 }
 
-Piece Grid_PieceAtIndex(int n)
+Piece Grid_PieceAtIndex(Grid *grid, int n)
 {
-
+    return grid->cells[n];
 }
 
-Piece Grid_PieceAtCoords(SDL_Point p)
+Piece Grid_PieceAtCoords(Grid *g, SDL_Point p)
 {
-
+    int n = Grid_CoordsToIndex(p);
+    return Grid_PieceAtIndex(g, n);
 }
 
 GameState *GameState_Init()
@@ -44,4 +50,5 @@ GameState *GameState_Init()
 bool GameState_Tick(GameState *gameState)
 {
     gameState->playing = false;
+    return true;
 }

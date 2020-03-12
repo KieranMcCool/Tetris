@@ -3,7 +3,7 @@
 #include "game.h"
 #include "render.h"
 
-char PollEvent()
+char PollEvent(GameState *gameState)
 {
     char c;
     SDL_Event e;
@@ -11,6 +11,7 @@ char PollEvent()
     {
         if (e.type == SDL_QUIT)
         {
+            gameState->playing = false;
             c = 'q';
         }
         else if (e.type == SDL_KEYDOWN)
@@ -40,18 +41,20 @@ char PollEvent()
 
 int main()
 {
-    SDL_Renderer *rend = initialiseRenderer();
-    bool running = true;
-    SDL_RenderPresent(rend);
+    SDL_Renderer *rend = InitialiseRenderer();
 
     GameState *game = GameState_Init();
 
     while (game->playing)
     {
-        PollEvent();
-        GameState_Tick(game);
-        Draw_GameState(game);
+        PollEvent(game);
+        if (game->playing)
+        {
+            GameState_Tick(rend, game);
+            Draw_GameState(rend, game);
+        }
     }
 
+    SDL_DestroyRenderer(rend);
     return 1;
 }

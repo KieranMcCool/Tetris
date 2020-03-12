@@ -8,9 +8,9 @@
 #define WIDTH 640
 #define HEIGHT 800
 
-SDL_Renderer *initialiseRenderer();
-bool Draw_Grid(Grid *g);
-bool Draw_UI(int score);
-bool Draw_GameState(GameState *g);
+SDL_Renderer *InitialiseRenderer();
+bool Draw_Grid(SDL_Renderer *renderer, Grid *g);
+bool Draw_UI(SDL_Renderer *renderer, int score);
+bool Draw_GameState(SDL_Renderer *renderer, GameState *g);
 
 #endif

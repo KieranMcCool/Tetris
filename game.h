@@ -11,14 +11,14 @@
 typedef enum piece { I, O, T, S, Z, J, L, Empty } Piece;
 
 typedef struct grid {
-    Piece cells[GRID_HEIGHT * GRID_WIDTH];
+    Piece cells[GRID_HEIGHT * GRID_HEIGHT];
 } Grid;
 
 Grid *Grid_Init();
 SDL_Point Grid_IndexToCoords(int n);
 int Grid_CoordsToIndex(SDL_Point p);
-Piece Grid_PieceAtIndex(int n);
-Piece Grid_PieceAtCoords(SDL_Point p);
+Piece Grid_PieceAtIndex(Grid *grid, int n);
+Piece Grid_PieceAtCoords(Grid *grid, SDL_Point p);
 
 typedef struct gameState {
     Grid *grid;

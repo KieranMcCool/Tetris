@@ -5,6 +5,8 @@
 #include <SDL.h>
 #include "game.h"
 
+#define FPS 60
+
 #define WIDTH 600
 #define HEIGHT 800
 

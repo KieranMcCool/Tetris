@@ -3,8 +3,6 @@
 #include "game.h"
 #include "render.h"
 
-#define FPS 20
-
 char PollEvent(GameState *gameState)
 {
     char c;

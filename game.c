@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "game.h"
+#include "render.h"
 
 Grid *Grid_Init()
 {
@@ -56,7 +57,7 @@ GameState *GameState_Init()
     gameState->playing = true;
     gameState->score = 0;
     gameState->tick = 0;
-    gameState->gameSpeed = 20;
+    gameState->gameSpeed = 1;
     gameState->grid = Grid_Init();
     return gameState;
 }
@@ -64,7 +65,8 @@ GameState *GameState_Init()
 void GameState_Tick(GameState *gameState)
 {
     gameState->tick++;
-    if (gameState->tick % gameState->gameSpeed == 0)
+    int modTargetFrame = FPS / gameState->gameSpeed;
+    if (gameState->tick % modTargetFrame == 0)
     {
         Grid *grid = gameState->grid;
         int size = GRID_WIDTH * GRID_HEIGHT;

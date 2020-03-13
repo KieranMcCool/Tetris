@@ -28,6 +28,6 @@ typedef struct gameState {
 } GameState;
 
 GameState *GameState_Init();
-bool GameState_Tick();
+void GameState_Tick(GameState *gameState);
 
 #endif 

@@ -55,6 +55,8 @@ void ColorFromCell(SDL_Renderer *renderer, Piece p)
         case L:
             SetColor(renderer, ORANGE);
             break;
+        default:
+            break;
     }
 }
 
@@ -71,6 +73,7 @@ bool Draw_Grid(SDL_Renderer *renderer, Grid *g)
 
     int cellWidth = targetWidth / GRID_WIDTH;
     int cellHeight = targetHeight / GRID_HEIGHT;
+
 
     SDL_Rect boundingBox = {
         .x = padding,
@@ -128,7 +131,6 @@ void Draw_Guides(SDL_Renderer *renderer)
 bool Draw_GameState(SDL_Renderer *renderer, GameState *g)
 {
     SDL_RenderClear(renderer);
-    // Draw_Guides(renderer);
     Draw_UI(renderer, g->score);
     Draw_Grid(renderer, g->grid);
     SDL_RenderPresent(renderer);

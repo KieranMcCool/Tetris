@@ -7,7 +7,7 @@ char PollEvent(GameState *gameState)
 {
     char c;
     SDL_Event e;
-    while (SDL_PollEvent(&e))
+    if (SDL_PollEvent(&e) != 0)
     {
         if (e.type == SDL_QUIT)
         {
@@ -42,15 +42,15 @@ char PollEvent(GameState *gameState)
 int main()
 {
     SDL_Renderer *rend = InitialiseRenderer();
-
     GameState *game = GameState_Init();
 
     while (game->playing)
     {
+        SDL_Delay(500);
         PollEvent(game);
         if (game->playing)
         {
-            GameState_Tick(rend, game);
+            GameState_Tick(game);
             Draw_GameState(rend, game);
         }
     }

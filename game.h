@@ -25,6 +25,8 @@ typedef struct gameState {
     int score;
     bool dropping;
     bool playing;
+    uint32_t tick;
+    int gameSpeed;
 } GameState;
 
 GameState *GameState_Init();

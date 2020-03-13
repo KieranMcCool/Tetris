@@ -3,10 +3,11 @@
 
 Grid *Grid_Init()
 {
-    int size = GRID_WIDTH * GRID_HEIGHT;
 
     Grid *grid = malloc(sizeof(Grid));
 
+    int size = GRID_WIDTH * GRID_HEIGHT;
+    
     for (int i = 0; i < size; i++)
     {
         grid->cells[i] = Empty;
@@ -54,33 +55,37 @@ GameState *GameState_Init()
     gameState->dropping = false;
     gameState->playing = true;
     gameState->score = 0;
+    gameState->tick = 0;
+    gameState->gameSpeed = 20;
     gameState->grid = Grid_Init();
     return gameState;
 }
 
 void GameState_Tick(GameState *gameState)
 {
-    Grid *grid = gameState->grid;
-    int size = GRID_WIDTH * GRID_HEIGHT;
-
-    for (int i = size - 2; i > 0; i--)
+    gameState->tick++;
+    if (gameState->tick % gameState->gameSpeed == 0)
     {
-        if (grid->cells[i] != Empty) 
-        {
-            SDL_Point coords = Grid_IndexToCoords(i);
-            SDL_Point belowCoords = {.x = coords.x, .y = coords.y + 1};
+        Grid *grid = gameState->grid;
+        int size = GRID_WIDTH * GRID_HEIGHT;
 
-            if (belowCoords.y < GRID_HEIGHT) 
+        for (int i = size - 2; i > 0; i--)
+        {
+            if (grid->cells[i] != Empty) 
             {
-                int belowIndex = Grid_CoordsToIndex(belowCoords);
-                if (grid->cells[belowIndex] == Empty) 
+                SDL_Point coords = Grid_IndexToCoords(i);
+                SDL_Point belowCoords = {.x = coords.x, .y = coords.y + 1};
+
+                if (belowCoords.y < GRID_HEIGHT) 
                 {
-                    grid->cells[belowIndex] = grid->cells[i];
-                    grid->cells[i] = Empty;
+                    int belowIndex = Grid_CoordsToIndex(belowCoords);
+                    if (grid->cells[belowIndex] == Empty) 
+                    {
+                        grid->cells[belowIndex] = grid->cells[i];
+                        grid->cells[i] = Empty;
+                    }
                 }
             }
         }
     }
-
-    gameState->grid = grid;
 }

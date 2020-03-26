@@ -41,6 +41,7 @@ char PollEvent(GameState *gameState)
 
 int main()
 {
+    srand(time(NULL));
     SDL_Renderer *rend = InitialiseRenderer();
     GameState *game = GameState_Init();
     uint32_t targetTicks = 1000 / FPS;

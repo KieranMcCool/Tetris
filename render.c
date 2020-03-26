@@ -26,7 +26,7 @@ void SetColor(SDL_Renderer *renderer, int hex)
 {
     float r = ((hex >> 16) & 0xff);
     float g = ((hex >> 8) & 0xff);
-    float b = ((hex >> 16) & 0xff);
+    float b = ((hex) & 0xff);
     SDL_SetRenderDrawColor(renderer, r, g, b, 255);
 }
 

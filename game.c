@@ -12,18 +12,8 @@ Grid *Grid_Init()
     for (int i = 0; i < size; i++)
     {
         grid->cells[i] = Empty;
+        grid->cellsActiveState[i] = false;
     }
-
-    grid->cells[0] = I;
-    grid->cells[1] = I;
-    grid->cells[2] = O;
-    grid->cells[3] = T;
-    grid->cells[4] = S;
-    grid->cells[5] = Z;
-    grid->cells[6] = J;
-    grid->cells[7] = L;
-    grid->cells[8] = T;
-    grid->cells[size - 1] = O;
 
     return grid;
 }
@@ -52,6 +42,51 @@ Piece Grid_PieceAtCoords(Grid *g, SDL_Point p)
     return Grid_PieceAtIndex(g, n);
 }
 
+bool Grid_IndexIsActive(Grid *grid, int i)
+{
+    return grid->cellsActiveState[i];
+}
+
+bool Grid_CoordIsActive(Grid *grid, SDL_Point p)
+{
+    int index = Grid_CoordsToIndex(p);
+    return Grid_IndexIsActive(grid, index);
+}
+
+void Grid_SpawnPiece(Grid *grid) {
+    int randomPiece = rand() % 7;
+    Piece piece;
+    char *pieceData;
+
+    switch (randomPiece)
+    {
+        case 0: piece = I; pieceData = IPiece; break;
+        case 1: piece = O; pieceData = OPiece; break;
+        case 2: piece = T; pieceData = TPiece; break;
+        case 3: piece = S; pieceData = SPiece; break;
+        case 4: piece = Z; pieceData = ZPiece; break;
+        case 5: piece = J; pieceData = JPiece; break;
+        case 6: piece = L; pieceData = LPiece; break;
+    }
+
+    // int xOffset = GRID_WIDTH / 2;
+    int xOffset = rand() % (GRID_WIDTH - 1);
+    int yOffset = 0;
+
+    for (size_t i = 0; i <= strlen(pieceData); i++) 
+    {
+        if (pieceData[i] == '1')
+        {
+            int x = (i % 4) + xOffset;
+            int y = (i / 4) + yOffset;
+            SDL_Point p = { .x=x, .y=y };
+            int index = Grid_CoordsToIndex(p);
+            grid->cells[index] = piece;
+            grid->cellsActiveState[index] = true;
+        }
+    }
+}
+
 GameState *GameState_Init()
 {
     GameState *gameState = malloc(sizeof(GameState));
@@ -59,7 +94,7 @@ GameState *GameState_Init()
     gameState->playing = true;
     gameState->score = 0;
     gameState->tick = 0;
-    gameState->gameSpeed = 1;
+    gameState->gameSpeed = 10;
     gameState->grid = Grid_Init();
     return gameState;
 }
@@ -116,23 +151,60 @@ void GameState_Gravity(GameState *gameState)
     Grid *grid = gameState->grid;
     int size = GRID_WIDTH * GRID_HEIGHT;
 
+    bool hitBottom = false;
+    int reverseFrom;
+
     for (int i = size; i >= 0; i--)
     {
-        if (grid->cells[i] != Empty)
+        if (Grid_IndexIsActive(gameState->grid, i))
         {
             SDL_Point coords = Grid_IndexToCoords(i);
             SDL_Point belowCoords = {.x = coords.x, .y = coords.y + 1};
 
+            grid->cellsActiveState[i] = false;
+
             if (belowCoords.y < GRID_HEIGHT)
             {
                 int belowIndex = Grid_CoordsToIndex(belowCoords);
-                if (grid->cells[belowIndex] == Empty)
+
+                if (Grid_PieceAtIndex(gameState->grid, belowIndex) == Empty && !hitBottom)
                 {
                     grid->cells[belowIndex] = grid->cells[i];
+                    grid->cellsActiveState[belowIndex] = true;
                     grid->cells[i] = Empty;
+                }
+                else
+                {
+                    hitBottom = true;
+                    reverseFrom = belowIndex - 1;
+                    break;
                 }
             }
         }
+    }
+
+    if (hitBottom)
+    {
+        for (int i = size; i >= reverseFrom; i--)
+        {
+            SDL_Point coords = Grid_IndexToCoords(i);
+
+            if (Grid_CoordIsActive(gameState->grid, coords))
+            {
+                grid->cellsActiveState[i] = false;
+                SDL_Point aboveCoords = {.x = coords.x, .y = coords.y - 1};
+                int aboveIndex = Grid_CoordsToIndex(aboveCoords);
+                grid->cells[aboveIndex] = grid->cells[i];
+                grid->cells[i] = Empty;
+            }
+        }
+
+        for (int i = 0; i <= size; i++)
+        {
+            grid->cellsActiveState[i] = false;
+        }
+
+        gameState->dropping = false;
     }
 }
 
@@ -145,6 +217,13 @@ void GameState_Tick(GameState *gameState)
         // Points per piece  every piece = 10*(level + 1) points
         GameState_Gravity(gameState);
         GameState_ClearLines(gameState);
+
+        if (!gameState->dropping)
+        {
+            gameState->dropping = true;
+            Grid_SpawnPiece(gameState->grid);
+        }
+
         //Clear the board = 2000*(level + 1)
     }
 }

@@ -12,12 +12,12 @@
 
 #define BLACK       0x000000
 #define WHITE       0xffffff
-#define LIGHTBLUE   0x00fff7
+#define LIGHTBLUE   0x44FFFF
 #define DARKBLUE    0x002aff
-#define ORANGE      0xff8c00
-#define YELLOW      0xff8c00
-#define GREEN       0x33ff00
-#define PURPLE      0xf700ff
+#define ORANGE      0xFF8800
+#define YELLOW      0xFFFF44
+#define GREEN       0x44FF44
+#define PURPLE      0x44FF44
 #define RED         0Xff0000
 
 SDL_Renderer *InitialiseRenderer();

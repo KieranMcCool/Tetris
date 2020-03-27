@@ -72,19 +72,22 @@ bool Draw_Grid(SDL_Renderer *renderer, Grid *g)
     float targetHeight = HEIGHT * scalingY - (2 * padding);
 
     int cellWidth = targetWidth / GRID_WIDTH;
-    int cellHeight = targetHeight / GRID_HEIGHT;
+    int cellHeight = targetHeight / (GRID_HEIGHT - MAX_PIECE_HEIGHT);
 
 
     SDL_Rect boundingBox = {
         .x = padding,
         .y = padding,
         .w = cellWidth * GRID_WIDTH,
-        .h = cellHeight * GRID_HEIGHT};
+        .h = cellHeight * (GRID_HEIGHT - MAX_PIECE_HEIGHT)};
 
     SetColor(renderer, WHITE);
     SDL_RenderDrawRect(renderer, &boundingBox);
 
-    for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++)
+    SDL_Point startPoint = {.x = 0, .y = MAX_PIECE_HEIGHT};
+    int startIndex = Grid_CoordsToIndex(startPoint);
+
+    for (int i = startIndex; i < GRID_WIDTH * GRID_HEIGHT; i++)
     {
         if (g->cells[i] != Empty)
         {
@@ -92,7 +95,7 @@ bool Draw_Grid(SDL_Renderer *renderer, Grid *g)
 
             SDL_Rect cellRect = {
                 .x = boundingBox.x + (gridCoords.x * cellWidth),
-                .y = boundingBox.y + (gridCoords.y * cellHeight),
+                .y = boundingBox.y + ((gridCoords.y - MAX_PIECE_HEIGHT) * cellHeight),
                 .w = cellWidth,
                 .h = cellHeight};
 

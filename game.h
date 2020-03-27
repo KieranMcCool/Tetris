@@ -6,8 +6,10 @@
 #include <SDL.h>
 #include <string.h>
 
+#define MAX_PIECE_HEIGHT 3
+
 #define GRID_WIDTH 10
-#define GRID_HEIGHT 20
+#define GRID_HEIGHT 23
 
 typedef enum piece { I, O, T, S, Z, J, L, Empty } Piece;
 
@@ -24,11 +26,13 @@ Piece Grid_PieceAtCoords(Grid *grid, SDL_Point p);
 void Grid_SpawnPiece(Grid *grid);
 bool Grid_IndexIsActive(Grid *grid, int i);
 bool Grid_CoordIsActive(Grid *grid, SDL_Point p);
+void Grid_ClearActiveStates(Grid *grid);
 
 typedef struct gameState {
     Grid *grid;
     int score;
     bool dropping;
+    int droppedBlocks;
     bool playing;
     uint32_t tick;
     int gameSpeed;
@@ -36,49 +40,51 @@ typedef struct gameState {
 
 GameState *GameState_Init();
 void GameState_Tick(GameState *gameState);
-
-//  I, O, T, S, Z, J, L, Empty
+void GameState_ClearLines(GameState *gameState);
+void GameState_Gravity(GameState *gameState);
+void GameState_NextPiece(GameState *gameState);
+void GameState_CheckLoss(GameState *gameState);
 
 static char IPiece[] = 
-"0100\
-0100\
-0100\
-0100";
+"1000\
+1000\
+1000\
+1000";
 
 static char OPiece[] = 
-"1100\
-1100\
+"0000\
 0000\
-0000";
+1100\
+1100";
 
 static char TPiece[] = 
-"0100\
-1110\
+"0000\
 0000\
-0000";
+0100\
+1110";
 
 static char SPiece[] = 
-"0011\
-0110\
+"0000\
 0000\
-0000";
+0110\
+1100";
 
 static char ZPiece[] = 
-"1100\
-0110\
+"0000\
 0000\
-0000";
+1100\
+0110";
 
 static char JPiece[] = 
-"0100\
+"0000\
 0100\
 0100\
-0110";
+1100";
 
 static char LPiece[] = 
-"0100\
-0100\
-0100\
-0110";
+"0000\
+1000\
+1000\
+1100";
 
 #endif 

@@ -53,6 +53,15 @@ bool Grid_CoordIsActive(Grid *grid, SDL_Point p)
     return Grid_IndexIsActive(grid, index);
 }
 
+void Grid_ClearActiveStates(Grid *grid)
+{
+    int size = GRID_HEIGHT * GRID_WIDTH;
+    for (int i = 0; i <= size; i++)
+    {
+        grid->cellsActiveState[i] = false;
+    }
+}
+
 void Grid_SpawnPiece(Grid *grid) {
     int randomPiece = rand() % 7;
     Piece piece;
@@ -70,7 +79,7 @@ void Grid_SpawnPiece(Grid *grid) {
     }
 
     // int xOffset = GRID_WIDTH / 2;
-    int xOffset = rand() % (GRID_WIDTH - 1);
+    int xOffset = rand() % (GRID_WIDTH - 2);
     int yOffset = 0;
 
     for (size_t i = 0; i <= strlen(pieceData); i++) 
@@ -172,6 +181,7 @@ void GameState_Gravity(GameState *gameState)
                     grid->cells[belowIndex] = grid->cells[i];
                     grid->cellsActiveState[belowIndex] = true;
                     grid->cells[i] = Empty;
+                    gameState->droppedBlocks++;
                 }
                 else
                 {
@@ -199,12 +209,27 @@ void GameState_Gravity(GameState *gameState)
             }
         }
 
-        for (int i = 0; i <= size; i++)
-        {
-            grid->cellsActiveState[i] = false;
-        }
+        Grid_ClearActiveStates(grid);
 
         gameState->dropping = false;
+    }
+}
+
+void GameState_NextPiece(GameState *gameState)
+{
+    if (!gameState->dropping)
+    {
+        gameState->dropping = true;
+        gameState->droppedBlocks = 0;
+        Grid_SpawnPiece(gameState->grid);
+    }
+}
+
+void GameState_CheckLoss(GameState *gameState)
+{
+    if (!gameState->dropping && gameState->droppedBlocks == 0)
+    {
+        gameState->playing = false;
     }
 }
 
@@ -212,17 +237,13 @@ void GameState_Tick(GameState *gameState)
 {
     gameState->tick++;
     int modTargetFrame = FPS / gameState->gameSpeed;
-    if (gameState->tick % modTargetFrame == 0)
+    if (gameState->tick % modTargetFrame == 0 && gameState->playing)
     {
         // Points per piece  every piece = 10*(level + 1) points
         GameState_Gravity(gameState);
         GameState_ClearLines(gameState);
-
-        if (!gameState->dropping)
-        {
-            gameState->dropping = true;
-            Grid_SpawnPiece(gameState->grid);
-        }
+        GameState_CheckLoss(gameState);
+        GameState_NextPiece(gameState);
 
         //Clear the board = 2000*(level + 1)
     }

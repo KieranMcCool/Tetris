@@ -195,7 +195,7 @@ void GameState_Gravity(GameState *gameState)
 
     if (hitBottom)
     {
-        for (int i = size; i >= reverseFrom; i--)
+        for (int i = size; i > reverseFrom; i--)
         {
             SDL_Point coords = Grid_IndexToCoords(i);
 
@@ -219,6 +219,7 @@ void GameState_NextPiece(GameState *gameState)
 {
     if (!gameState->dropping)
     {
+        gameState->score = gameState->score + (10 * gameState->gameSpeed + 1);
         gameState->dropping = true;
         gameState->droppedBlocks = 0;
         Grid_SpawnPiece(gameState->grid);

@@ -3,6 +3,7 @@
 #define RENDER_H
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "game.h"
 
 #define FPS 60

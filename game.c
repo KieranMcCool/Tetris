@@ -264,3 +264,10 @@ void GameState_Tick(GameState *gameState)
 
     }
 }
+
+void GameState_ProcessInput(Action action, GameState *gameState) 
+{
+    if (action == QUIT) {
+        gameState->playing = false;
+    }
+}

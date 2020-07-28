@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <SDL.h>
 #include <string.h>
+#include "input.h"
 
 #define MAX_PIECE_HEIGHT 3
 
@@ -45,6 +46,7 @@ void GameState_Gravity(GameState *gameState);
 void GameState_NextPiece(GameState *gameState);
 void GameState_CheckLoss(GameState *gameState);
 bool GameState_BoardIsClear(GameState *gameState);
+void GameState_ProcessInput(Action action, GameState *gameState);
 
 static char IPiece[] = 
 "1000\

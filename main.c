@@ -2,42 +2,7 @@
 #include <stdbool.h>
 #include "game.h"
 #include "render.h"
-
-char PollEvent(GameState *gameState)
-{
-    char c;
-    SDL_Event e;
-    if (SDL_PollEvent(&e) != 0)
-    {
-        if (e.type == SDL_QUIT)
-        {
-            gameState->playing = false;
-            c = 'q';
-        }
-        else if (e.type == SDL_KEYDOWN)
-        {
-            switch (e.key.keysym.sym)
-            {
-            case 'w':
-                c = c == 'd' ? 'd' : 'u';
-                break;
-            case 's':
-                c = c == 'u' ? 'u' : 'd';
-                break;
-            case 'a':
-                c = c == 'r' ? 'r' : 'l';
-                break;
-            case 'd':
-                c = c == 'l' ? 'l' : 'r';
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    return c;
-}
+#include "input.h"
 
 int main()
 {
@@ -49,7 +14,8 @@ int main()
     while (game->playing)
     {
         uint32_t startTicks = SDL_GetTicks();
-        PollEvent(game);
+        Action inputAction = Input_PollEvent();
+        GameState_ProcessInput(inputAction, game);
         if (game->playing)
         {
             GameState_Tick(game);

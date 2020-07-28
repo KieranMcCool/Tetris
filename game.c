@@ -234,18 +234,33 @@ void GameState_CheckLoss(GameState *gameState)
     }
 }
 
+bool GameState_BoardIsClear(GameState *gameState)
+{
+    for (int i = 0; i <= GRID_HEIGHT * GRID_WIDTH; i++)
+    {
+       if (gameState->grid->cells[i] != Empty) return false;
+    }
+
+    return true;
+}
+
 void GameState_Tick(GameState *gameState)
 {
     gameState->tick++;
     int modTargetFrame = FPS / gameState->gameSpeed;
     if (gameState->tick % modTargetFrame == 0 && gameState->playing)
     {
-        // Points per piece  every piece = 10*(level + 1) points
         GameState_Gravity(gameState);
         GameState_ClearLines(gameState);
         GameState_CheckLoss(gameState);
+
+        if (GameState_BoardIsClear(gameState))
+        {
+            //Clear the board = 2000*(level + 1)
+            gameState->score = gameState->score + (2000 * (gameState->gameSpeed + 1));
+        }
+
         GameState_NextPiece(gameState);
 
-        //Clear the board = 2000*(level + 1)
     }
 }

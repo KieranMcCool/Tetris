@@ -44,6 +44,7 @@ void GameState_ClearLines(GameState *gameState);
 void GameState_Gravity(GameState *gameState);
 void GameState_NextPiece(GameState *gameState);
 void GameState_CheckLoss(GameState *gameState);
+bool GameState_BoardIsClear(GameState *gameState);
 
 static char IPiece[] = 
 "1000\

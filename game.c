@@ -78,8 +78,7 @@ void Grid_SpawnPiece(Grid *grid) {
         case 6: piece = L; pieceData = LPiece; break;
     }
 
-    // int xOffset = GRID_WIDTH / 2;
-    int xOffset = rand() % (GRID_WIDTH - 2);
+    int xOffset = GRID_WIDTH / 2;
     int yOffset = 0;
 
     for (size_t i = 0; i <= strlen(pieceData); i++) 

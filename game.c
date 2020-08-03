@@ -154,7 +154,7 @@ void GameState_ClearLines(GameState *gameState)
     }
 }
 
-void GameState_Gravity(GameState *gameState)
+bool GameState_Gravity(GameState *gameState)
 {
     Grid *grid = gameState->grid;
     int size = GRID_WIDTH * GRID_HEIGHT;
@@ -212,6 +212,8 @@ void GameState_Gravity(GameState *gameState)
 
         gameState->dropping = false;
     }
+
+    return hitBottom;
 }
 
 void GameState_NextPiece(GameState *gameState)
@@ -266,7 +268,78 @@ void GameState_Tick(GameState *gameState)
 
 void GameState_ProcessInput(Action action, GameState *gameState) 
 {
-    if (action == QUIT) {
+    if (action == QUIT)
+    {
         gameState->playing = false;
+    }
+    else if (action == UP || action == DOWN || action == LEFT || action == RIGHT)
+    {
+        GameState_MovePiece(action, gameState);
+    }
+}
+
+void GameState_MovePiece(Action action, GameState *gameState)
+{
+    int max = GRID_HEIGHT * GRID_WIDTH;
+    switch (action)
+    {
+        case UP:
+        {
+            bool bottom = GameState_Gravity(gameState);
+            while (!bottom)
+            {
+                bottom = GameState_Gravity(gameState);
+            }
+            break;
+        }
+        case DOWN:
+            GameState_Gravity(gameState);
+            break;
+        case LEFT:
+            for (int i = 0; i <= max; i++)
+            {
+                if (gameState->grid->cellsActiveState[i]) 
+                {
+                   SDL_Point coords = Grid_IndexToCoords(i);
+                   SDL_Point newCoords;
+                   newCoords.x = coords.x - 1;
+                   newCoords.y = coords.y;
+                   int newIndex = Grid_CoordsToIndex(newCoords);
+
+                   if (newCoords.x >= 0 && newCoords.x <= GRID_WIDTH)
+                   {
+                       gameState->grid->cellsActiveState[i] = false;
+                       gameState->grid->cellsActiveState[newIndex] = true;
+
+                       gameState->grid->cells[newIndex] = gameState->grid->cells[i];
+                       gameState->grid->cells[i] = Empty;
+                   }
+                }
+            }
+            break;
+        case RIGHT:
+            for (int i = max; i > 0; i--)
+            {
+                if (gameState->grid->cellsActiveState[i]) 
+                {
+                   SDL_Point coords = Grid_IndexToCoords(i);
+                   SDL_Point newCoords;
+                   newCoords.x = coords.x + 1;
+                   newCoords.y = coords.y;
+                   int newIndex = Grid_CoordsToIndex(newCoords);
+
+                   if (newCoords.x >= 0 && newCoords.x <= GRID_WIDTH)
+                   {
+                       gameState->grid->cellsActiveState[i] = false;
+                       gameState->grid->cellsActiveState[newIndex] = true;
+
+                       gameState->grid->cells[newIndex] = gameState->grid->cells[i];
+                       gameState->grid->cells[i] = Empty;
+                   }
+                }
+            }
+            break;
+        default:
+            break;
     }
 }

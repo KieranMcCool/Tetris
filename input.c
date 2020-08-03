@@ -14,20 +14,20 @@ Action Input_PollEvent()
         {
             switch (e.key.keysym.sym)
             {
-            case 'w':
-                action = UP;
-                break;
-            case 's':
-                action = DOWN;
-                break;
-            case 'a':
-                action = LEFT;
-                break;
-            case 'd':
-                action = RIGHT; 
-                break;
-            default:
-                break;
+                case 'w':
+                    action = UP;
+                    break;
+                case 's':
+                    action = DOWN;
+                    break;
+                case 'a':
+                    action = LEFT;
+                    break;
+                case 'd':
+                    action = RIGHT; 
+                    break;
+                default:
+                    break;
             }
         }
     }

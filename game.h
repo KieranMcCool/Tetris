@@ -42,11 +42,12 @@ typedef struct gameState {
 GameState *GameState_Init();
 void GameState_Tick(GameState *gameState);
 void GameState_ClearLines(GameState *gameState);
-void GameState_Gravity(GameState *gameState);
+bool GameState_Gravity(GameState *gameState);
 void GameState_NextPiece(GameState *gameState);
 void GameState_CheckLoss(GameState *gameState);
 bool GameState_BoardIsClear(GameState *gameState);
 void GameState_ProcessInput(Action action, GameState *gameState);
+void GameState_MovePiece(Action action, GameState *gameState);
 
 static char IPiece[] = 
 "1000\

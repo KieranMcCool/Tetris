@@ -272,7 +272,19 @@ void GameState_ProcessInput(Action action, GameState *gameState)
     {
         gameState->playing = false;
     }
-    else if (action == UP || action == DOWN || action == LEFT || action == RIGHT)
+    else if (action == UP)
+    {
+        bool bottom = GameState_Gravity(gameState);
+        while (!bottom)
+        {
+            bottom = GameState_Gravity(gameState);
+        }
+    }
+    else if (action == DOWN)
+    {
+        GameState_Gravity(gameState);
+    }
+    else if (action == LEFT || action == RIGHT)
     {
         GameState_MovePiece(action, gameState);
     }
@@ -281,65 +293,47 @@ void GameState_ProcessInput(Action action, GameState *gameState)
 void GameState_MovePiece(Action action, GameState *gameState)
 {
     int max = GRID_HEIGHT * GRID_WIDTH;
-    switch (action)
+    bool moveIsValid = true;
+    int xMod = action == LEFT ? -1 : 1;
+    for (int i = 0; i <= max; i++)
     {
-        case UP:
+        int index = action == LEFT ? i : max - i;
+        if (gameState->grid->cellsActiveState[index]) 
         {
-            bool bottom = GameState_Gravity(gameState);
-            while (!bottom)
+            SDL_Point coords = Grid_IndexToCoords(index);
+            SDL_Point newCoords;
+            newCoords.x = coords.x + xMod;
+            newCoords.y = coords.y;
+            int newIndex = Grid_CoordsToIndex(newCoords);
+            Piece pieceAtNewIndex = Grid_PieceAtIndex(gameState->grid, newIndex);
+
+            if (!(newCoords.x >= 0 && newCoords.x < GRID_WIDTH &&
+                (Grid_IndexIsActive(gameState->grid, newIndex) || pieceAtNewIndex == Empty)))
             {
-                bottom = GameState_Gravity(gameState);
+                moveIsValid = false;
+                break;
             }
-            break;
         }
-        case DOWN:
-            GameState_Gravity(gameState);
-            break;
-        case LEFT:
-            for (int i = 0; i <= max; i++)
+    }
+    
+    if (moveIsValid)
+    {
+        for (int i = 0; i <= max; i++)
+        {
+            int index = action == LEFT ? i : max - i;
+            if (gameState->grid->cellsActiveState[index]) 
             {
-                if (gameState->grid->cellsActiveState[i]) 
-                {
-                   SDL_Point coords = Grid_IndexToCoords(i);
-                   SDL_Point newCoords;
-                   newCoords.x = coords.x - 1;
-                   newCoords.y = coords.y;
-                   int newIndex = Grid_CoordsToIndex(newCoords);
+                SDL_Point coords = Grid_IndexToCoords(index);
+                SDL_Point newCoords;
+                newCoords.x = coords.x + xMod;
+                newCoords.y = coords.y;
+                int newIndex = Grid_CoordsToIndex(newCoords);
+                gameState->grid->cellsActiveState[index] = false;
+                gameState->grid->cellsActiveState[newIndex] = true;
 
-                   if (newCoords.x >= 0 && newCoords.x <= GRID_WIDTH)
-                   {
-                       gameState->grid->cellsActiveState[i] = false;
-                       gameState->grid->cellsActiveState[newIndex] = true;
-
-                       gameState->grid->cells[newIndex] = gameState->grid->cells[i];
-                       gameState->grid->cells[i] = Empty;
-                   }
-                }
+                gameState->grid->cells[newIndex] = gameState->grid->cells[index];
+                gameState->grid->cells[index] = Empty;
             }
-            break;
-        case RIGHT:
-            for (int i = max; i > 0; i--)
-            {
-                if (gameState->grid->cellsActiveState[i]) 
-                {
-                   SDL_Point coords = Grid_IndexToCoords(i);
-                   SDL_Point newCoords;
-                   newCoords.x = coords.x + 1;
-                   newCoords.y = coords.y;
-                   int newIndex = Grid_CoordsToIndex(newCoords);
-
-                   if (newCoords.x >= 0 && newCoords.x <= GRID_WIDTH)
-                   {
-                       gameState->grid->cellsActiveState[i] = false;
-                       gameState->grid->cellsActiveState[newIndex] = true;
-
-                       gameState->grid->cells[newIndex] = gameState->grid->cells[i];
-                       gameState->grid->cells[i] = Empty;
-                   }
-                }
-            }
-            break;
-        default:
-            break;
+        }
     }
 }

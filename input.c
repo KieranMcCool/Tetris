@@ -26,6 +26,9 @@ Action Input_PollEvent()
                 case 'd':
                     action = RIGHT; 
                     break;
+                case 'e':
+                    action = ROTATE;
+                    break;
                 default:
                     break;
             }

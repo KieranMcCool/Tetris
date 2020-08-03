@@ -268,25 +268,32 @@ void GameState_Tick(GameState *gameState)
 
 void GameState_ProcessInput(Action action, GameState *gameState) 
 {
-    if (action == QUIT)
+    switch (action)
     {
-        gameState->playing = false;
-    }
-    else if (action == UP)
-    {
-        bool bottom = GameState_Gravity(gameState);
-        while (!bottom)
+        case QUIT:
+            gameState->playing = false;
+            break;
+        case UP:
         {
-            bottom = GameState_Gravity(gameState);
+            bool bottom = GameState_Gravity(gameState);
+            while (!bottom)
+            {
+                bottom = GameState_Gravity(gameState);
+            }
+            break;
         }
-    }
-    else if (action == DOWN)
-    {
-        GameState_Gravity(gameState);
-    }
-    else if (action == LEFT || action == RIGHT)
-    {
-        GameState_MovePiece(action, gameState);
+        case DOWN:
+            GameState_Gravity(gameState);
+            break;
+        case LEFT:
+        case RIGHT:
+            GameState_MovePiece(action, gameState);
+            break;
+        case ROTATE:
+            GameState_RotatePiece(gameState);
+            break;
+        default:
+            break;
     }
 }
 
@@ -336,4 +343,9 @@ void GameState_MovePiece(Action action, GameState *gameState)
             }
         }
     }
+}
+
+void GameState_RotatePiece(GameState *gameState)
+{
+
 }

@@ -48,6 +48,7 @@ void GameState_CheckLoss(GameState *gameState);
 bool GameState_BoardIsClear(GameState *gameState);
 void GameState_ProcessInput(Action action, GameState *gameState);
 void GameState_MovePiece(Action action, GameState *gameState);
+void GameState_RotatePiece(GameState *gameState);
 
 static char IPiece[] = 
 "1000\

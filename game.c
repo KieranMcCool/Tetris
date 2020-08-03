@@ -77,7 +77,7 @@ void Grid_SpawnPiece(Grid *grid)
         case 5: piece = J; pieceData = JPiece; break;
         case 6: piece = L; pieceData = LPiece; break;
     }
-
+    
     int xOffset = (GRID_WIDTH / 2) - 1;
     int yOffset = 0;
 

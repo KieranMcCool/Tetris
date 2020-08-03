@@ -13,7 +13,7 @@ SDL_Renderer *InitialiseRenderer()
         SDL_Quit();
         return NULL;
     }
-    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, NULL);
+    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, 0);
     if (ren == NULL)
     {
         SDL_DestroyWindow(win);

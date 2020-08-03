@@ -3,6 +3,7 @@
 #include "game.h"
 #include "render.h"
 #include "input.h"
+#include <time.h>
 
 int main()
 {

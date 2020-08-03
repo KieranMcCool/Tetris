@@ -4,7 +4,6 @@
 
 Grid *Grid_Init()
 {
-
     Grid *grid = malloc(sizeof(Grid));
 
     int size = GRID_WIDTH * GRID_HEIGHT;
@@ -62,7 +61,8 @@ void Grid_ClearActiveStates(Grid *grid)
     }
 }
 
-void Grid_SpawnPiece(Grid *grid) {
+void Grid_SpawnPiece(Grid *grid) 
+{
     int randomPiece = rand() % 7;
     Piece piece;
     char *pieceData;
@@ -78,7 +78,7 @@ void Grid_SpawnPiece(Grid *grid) {
         case 6: piece = L; pieceData = LPiece; break;
     }
 
-    int xOffset = GRID_WIDTH / 2;
+    int xOffset = (GRID_WIDTH / 2) - 1;
     int yOffset = 0;
 
     for (size_t i = 0; i <= strlen(pieceData); i++) 

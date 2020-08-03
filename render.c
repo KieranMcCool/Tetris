@@ -6,13 +6,14 @@ SDL_Renderer *InitialiseRenderer()
     {
         return NULL;
     }
+    SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Window *win = SDL_CreateWindow("Tetris", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     if (win == NULL)
     {
         SDL_Quit();
         return NULL;
     }
-    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, NULL);
     if (ren == NULL)
     {
         SDL_DestroyWindow(win);
